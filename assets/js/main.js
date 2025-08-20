@@ -1,45 +1,47 @@
-/*
-	Industrious by TEMPLATED
-	templated.co @templatedco
-	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
-*/
-(function($) {
+'use strict';
 
-	var	$window = $(window),
-		$banner = $('#banner'),
-		$body = $('body');
+document.addEventListener('DOMContentLoaded', () => {
+  const body = document.body;
+  const menu = document.getElementById('menu');
+  const openMenuLink = document.querySelector('header nav a[href="#menu"]');
 
-	// Breakpoints.
-		breakpoints({
-			default:   ['1681px',   null       ],
-			xlarge:    ['1281px',   '1680px'   ],
-			large:     ['981px',    '1280px'   ],
-			medium:    ['737px',    '980px'    ],
-			small:     ['481px',    '736px'    ],
-			xsmall:    ['361px',    '480px'    ],
-			xxsmall:   [null,       '360px'    ]
-		});
+  // Remove preload class after window load
+  window.addEventListener('load', () => {
+    setTimeout(() => body.classList.remove('is-preload'), 100);
+  });
 
-	// Play initial animations on page load.
-		$window.on('load', function() {
-			window.setTimeout(function() {
-				$body.removeClass('is-preload');
-			}, 100);
-		});
+  // Create close link inside menu
+  const closeLink = document.createElement('a');
+  closeLink.href = '#menu';
+  closeLink.className = 'close';
+  closeLink.textContent = 'Cerrar';
+  menu.appendChild(closeLink);
 
-	// Menu.
-		$('#menu')
-			.append('<a href="#menu" class="close"></a>')
-			.appendTo($body)
-			.panel({
-				target: $body,
-				visibleClass: 'is-menu-visible',
-				delay: 500,
-				hideOnClick: true,
-				hideOnSwipe: true,
-				resetScroll: true,
-				resetForms: true,
-				side: 'right'
-			});
+  const hideMenu = () => body.classList.remove('is-menu-visible');
+  const showMenu = () => body.classList.add('is-menu-visible');
+  const toggleMenu = () => body.classList.toggle('is-menu-visible');
 
-})(jQuery);
+  openMenuLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showMenu();
+  });
+
+  closeLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    hideMenu();
+  });
+
+  // Hide menu when clicking outside
+  body.addEventListener('click', (e) => {
+    if (body.classList.contains('is-menu-visible') && !menu.contains(e.target) && e.target !== openMenuLink) {
+      hideMenu();
+    }
+  });
+
+  // Hide menu with ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      hideMenu();
+    }
+  });
+});
